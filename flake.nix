@@ -62,7 +62,6 @@
             asahi-fwextract
             mesa-asahi-edge
             ;
-          inherit (pkgs) asahi-audio;
 
           installer-bootstrap =
             let

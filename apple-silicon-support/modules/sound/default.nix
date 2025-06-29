@@ -36,11 +36,8 @@
             alsa.enable = true;
             pulse.enable = true;
 
-            configPackages = [ pkgs.asahi-audio ];
-
             wireplumber = {
               enable = true;
-
               configPackages = [ pkgs.asahi-audio ];
             };
           };
