@@ -63,7 +63,6 @@
           inherit (pkgs)
             m1n1
             uboot-asahi
-            linux-asahi
             asahi-fwextract
             mesa-asahi-edge
             ;
