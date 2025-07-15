@@ -4,5 +4,4 @@ final: prev: {
   uboot-asahi = final.callPackage ./uboot-asahi { };
   asahi-fwextract = final.callPackage ./asahi-fwextract { };
   alsa-ucm-conf-asahi = final.callPackage ./alsa-ucm-conf-asahi { };
-  asahi-audio = final.callPackage ./asahi-audio { };
 }

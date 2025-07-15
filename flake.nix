@@ -65,7 +65,6 @@
             uboot-asahi
             asahi-fwextract
             ;
-          inherit (pkgs) asahi-audio;
 
           installer-bootstrap =
             let
