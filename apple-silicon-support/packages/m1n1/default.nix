@@ -1,126 +1,61 @@
 {
-  stdenv,
-  buildPackages,
   lib,
+  stdenv,
   fetchFromGitHub,
-  python3,
-  dtc,
   imagemagick,
-  isRelease ? false,
-  withTools ? true,
-  withChainloading ? false,
-  customLogo ? null,
+  source-code-pro,
+  nix-update-script,
 }:
-
-let
-  pyenv = python3.withPackages (
-    p: with p; [
-      construct
-      pyserial
-    ]
-  );
-
-  stdenvOpts = {
-    targetPlatform.system = "aarch64-none-elf";
-    targetPlatform.rust.rustcTarget = "${stdenv.hostPlatform.parsed.cpu.name}-unknown-none-softfloat";
-    targetPlatform.rust.rustcTargetSpec = "${stdenv.hostPlatform.parsed.cpu.name}-unknown-none-softfloat";
-  };
-  rust = buildPackages.rust.override {
-    stdenv = lib.recursiveUpdate buildPackages.stdenv stdenvOpts;
-  };
-  rustPackages = rust.packages.stable.overrideScope (
-    f: p: {
-      rustc-unwrapped = p.rustc-unwrapped.override {
-        stdenv = lib.recursiveUpdate p.rustc-unwrapped.stdenv stdenvOpts;
-      };
-    }
-  );
-  rustPlatform = buildPackages.makeRustPlatform rustPackages;
-
-in
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "m1n1";
   version = "1.4.21";
 
   src = fetchFromGitHub {
-    # tracking: https://src.fedoraproject.org/rpms/m1n1
     owner = "AsahiLinux";
     repo = "m1n1";
-    rev = "v${version}";
-    hash = "sha256-PEjTaSwcsV8PzM9a3rDWMYXGX9FlrM0oeElrP5HYRPg=";
-    fetchSubmodules = true;
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-0ZnDexY/Sf2TJFfUv/YelCctFJVENffWqBU0r0azD0M=";
   };
-  cargoVendorDir = ".";
 
-  makeFlags =
-    [ "ARCH=${stdenv.cc.targetPrefix}" ]
-    ++ lib.optional isRelease "RELEASE=1"
-    ++ lib.optional withChainloading "CHAINLOADING=1";
+  nativeBuildInputs = [
+    imagemagick
+  ];
 
-  nativeBuildInputs =
-    [
-      dtc
-    ]
-    ++ lib.optionals withChainloading [
-      rustPackages.rustc
-      rustPackages.cargo
-      rustPlatform.cargoSetupHook
-    ]
-    ++ lib.optional (customLogo != null) imagemagick;
-
-  postPatch = ''
-    substituteInPlace proxyclient/m1n1/asm.py \
-      --replace 'aarch64-linux-gnu-' 'aarch64-unknown-linux-gnu-' \
-      --replace 'TOOLCHAIN = ""' 'TOOLCHAIN = "'$out'/toolchain-bin/"'
+  postConfigure = ''
+    patchShebangs --build font/makefont.sh
+    FONT_PATH=${source-code-pro}/share/fonts/opentype/SourceCodePro-Bold.otf
+    rm font/{SourceCodePro-Bold.ttf,font.bin,font_retina.bin}
+    ./font/makefont.sh 8 16 12 $FONT_PATH font/font.bin
+    ./font/makefont.sh 16 32 25 $FONT_PATH font/font_retina.bin
   '';
 
-  preConfigure = lib.optionalString (customLogo != null) ''
-    pushd data &>/dev/null
-    ln -fs ${customLogo} bootlogo_256.png
-    if [[ "$(magick identify bootlogo_256.png)" != 'bootlogo_256.png PNG 256x256'* ]]; then
-      echo "Custom logo is not a 256x256 PNG"
-      exit 1
-    fi
+  makeFlags = [
+    "ARCH=${stdenv.cc.targetPrefix}"
+    "RELEASE=1"
+  ];
 
-    rm bootlogo_128.png
-    convert bootlogo_256.png -resize 128x128 bootlogo_128.png
-    patchShebangs --build ./makelogo.sh
-    ./makelogo.sh
-    popd &>/dev/null
+  enableParallelBuilding = true;
+
+  installPhase = ''
+    runHook preInstall
+
+    install -Dm644 udev/80-m1n1.rules -t $out/lib/udev/rules.d/
+    install -Dm644 build/m1n1.{bin,macho} -t $out/lib/m1n1/
+    install -Dm644 m1n1.conf.example -t $out/doc/m1n1/
+
+    runHook postInstall
   '';
 
-  installPhase =
-    ''
-      runHook preInstall
+  passthru = {
+    updateScript = nix-update-script { };
+  };
 
-      mkdir -p $out/build
-      cp build/m1n1.bin $out/build
-    ''
-    + (lib.optionalString withTools ''
-          mkdir -p $out/{bin,script,toolchain-bin}
-          cp -r proxyclient $out/script
-          cp -r tools $out/script
-
-          for toolpath in $out/script/proxyclient/tools/*.py; do
-            tool=$(basename $toolpath .py)
-            script=$out/bin/m1n1-$tool
-            cat > $script <<EOF
-      #!/bin/sh
-      ${pyenv}/bin/python $toolpath "\$@"
-      EOF
-            chmod +x $script
-          done
-
-          GCC=${buildPackages.gcc}
-          BINUTILS=${buildPackages.binutils-unwrapped}
-
-          ln -s $GCC/bin/${stdenv.cc.targetPrefix}gcc $out/toolchain-bin/
-          ln -s $GCC/bin/${stdenv.cc.targetPrefix}ld $out/toolchain-bin/
-          ln -s $BINUTILS/bin/${stdenv.cc.targetPrefix}objcopy $out/toolchain-bin/
-          ln -s $BINUTILS/bin/${stdenv.cc.targetPrefix}objdump $out/toolchain-bin/
-          ln -s $GCC/bin/${stdenv.cc.targetPrefix}nm $out/toolchain-bin/
-    '')
-    + ''
-      runHook postInstall
-    '';
-}
+  meta = {
+    description = "Bootloader to bridge the Apple (XNU) boot to Linux boot";
+    homepage = "https://github.com/AsahiLinux/m1n1";
+    changelog = "https://github.com/AsahiLinux/m1n1/releases/tag/${finalAttrs.src.tag}";
+    license = lib.licenses.mit;
+    maintainers = with lib.maintainers; [ normalcea ];
+    platforms = [ "aarch64-linux" ];
+  };
+})
