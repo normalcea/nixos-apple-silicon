@@ -9,7 +9,7 @@ let
 
   bootM1n1 = pkgs'.m1n1;
 
-  bootUBoot = pkgs'.uboot-asahi.override {
+  bootUBoot = pkgs'.ubootAppleM1.override {
     m1n1 = bootM1n1;
   };
 
