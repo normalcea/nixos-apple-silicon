@@ -61,12 +61,6 @@
           };
         in
         {
-          inherit (pkgs)
-            m1n1
-            uboot-asahi
-            asahi-fwextract
-            ;
-
           linux-asahi = pkgs.linux-asahi.kernel;
 
           installer-bootstrap =
