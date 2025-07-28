@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs = {
-      url = "github:nixos/nixpkgs/nixos-unstable";
+      url = "github:normalcea/nixpkgs/init-ubootAppleM1";
     };
 
     flake-compat.url = "github:nix-community/flake-compat";
