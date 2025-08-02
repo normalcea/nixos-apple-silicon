@@ -62,7 +62,6 @@
         in
         {
           inherit (pkgs)
-            uboot-asahi
             mesa-asahi-edge
             ;
 
