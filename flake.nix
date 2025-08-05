@@ -96,6 +96,8 @@
                 inherit config;
               };
             }));
+
+          default = outputs.packages.${system}.installer-bootstrap;
         }
       );
     };
