@@ -2,7 +2,6 @@
   lib,
   fetchFromGitHub,
   buildUBoot,
-  m1n1,
 }:
 
 (buildUBoot rec {
@@ -18,8 +17,7 @@
   defconfig = "apple_m1_defconfig";
   extraMeta.platforms = [ "aarch64-linux" ];
   filesToInstall = [
-    "u-boot-nodtb.bin.gz"
-    "m1n1-u-boot.bin"
+    "u-boot-nodtb.bin"
   ];
   extraConfig = ''
     CONFIG_IDENT_STRING=" ${version}"
@@ -37,10 +35,4 @@
 
     # DTC= flag somehow breaks DTC compilation so we remove it
     makeFlags = builtins.filter (s: (!(lib.strings.hasPrefix "DTC=" s))) o.makeFlags;
-
-    preInstall = ''
-      # compress so that m1n1 knows U-Boot's size and can find things after it
-      gzip -n u-boot-nodtb.bin
-      cat ${m1n1}/build/m1n1.bin arch/arm/dts/t[68]*.dtb u-boot-nodtb.bin.gz > m1n1-u-boot.bin
-    '';
   })

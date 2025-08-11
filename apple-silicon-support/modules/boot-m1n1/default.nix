@@ -9,15 +9,14 @@ let
 
   bootM1n1 = pkgs'.m1n1;
 
-  bootUBoot = pkgs'.uboot-asahi.override {
-    m1n1 = bootM1n1;
-  };
+  bootUBoot = pkgs'.uboot-asahi;
 
   bootFiles = {
     "m1n1/boot.bin" = pkgs.runCommand "boot.bin" { } ''
-      cat ${bootM1n1}/lib/m1n1/m1n1.bin > $out
-      cat ${config.boot.kernelPackages.kernel}/dtbs/apple/*.dtb >> $out
-      cat ${bootUBoot}/u-boot-nodtb.bin.gz >> $out
+       cat ${bootM1n1}/lib/m1n1/m1n1.bin \
+           ${config.boot.kernelPackages.kernel}/dtbs/apple/*.dtb \
+           <(gzip -c ${bootUBoot}/u-boot-nodtb.bin) \
+           > $out
       if [ -n "${config.boot.m1n1ExtraOptions}" ]; then
         echo '${config.boot.m1n1ExtraOptions}' >> $out
       fi
