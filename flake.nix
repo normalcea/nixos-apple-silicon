@@ -54,7 +54,6 @@
         {
           inherit (pkgs)
             uboot-asahi
-            mesa-asahi-edge
             ;
 
           linux-asahi = pkgs.linux-asahi.kernel;
