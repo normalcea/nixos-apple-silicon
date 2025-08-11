@@ -4,5 +4,4 @@ final: prev: {
   uboot-asahi = final.callPackage ./uboot-asahi { };
   asahi-fwextract = final.callPackage ./asahi-fwextract { };
   mesa-asahi-edge = final.callPackage ./mesa-asahi-edge { };
-  asahi-audio = final.callPackage ./asahi-audio { };
 }
