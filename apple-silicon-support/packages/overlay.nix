@@ -3,5 +3,4 @@ final: prev: {
   m1n1 = final.callPackage ./m1n1 { };
   uboot-asahi = final.callPackage ./uboot-asahi { };
   asahi-fwextract = final.callPackage ./asahi-fwextract { };
-  asahi-audio = final.callPackage ./asahi-audio { };
 }
