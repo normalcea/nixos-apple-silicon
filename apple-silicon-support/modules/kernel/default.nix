@@ -103,6 +103,11 @@
     (lib.mkRemovedOptionModule [
       "hardware"
       "asahi"
+      "setupAsahiSound"
+    ] "Sound setup is done by default when sound-related modules are enabled.")
+    (lib.mkRemovedOptionModule [
+      "hardware"
+      "asahi"
       "experimentalGPUInstallMode"
     ] "This option became unnecessary with asahi support landing in mainline mesa.")
     (lib.mkRemovedOptionModule [

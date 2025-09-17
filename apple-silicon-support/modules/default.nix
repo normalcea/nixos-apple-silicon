@@ -9,7 +9,6 @@
     ./kernel
     ./peripheral-firmware
     ./boot-m1n1
-    ./sound
   ];
 
   config =
@@ -28,6 +27,29 @@
           }
         else
           pkgs;
+
+      environment.variables.ALSA_CONFIG_UCM2 = "${pkgs.alsa-ucm-conf-asahi}/share/alsa/ucm2";
+      systemd.user.services.pipewire.environment.ALSA_CONFIG_UCM2 =
+        config.environment.variables.ALSA_CONFIG_UCM2;
+      systemd.user.services.wireplumber.environment.ALSA_CONFIG_UCM2 =
+        config.environment.variables.ALSA_CONFIG_UCM2;
+
+      # can't be used by Asahi sound infrastructure
+      services.pulseaudio.enable = lib.mkForce false;
+
+      # enable pipewire to run real-time and avoid audible glitches
+      security.rtkit.enable = config.services.pipewire.enable;
+
+      services.pipewire = {
+        configPackages = lib.optionals config.services.pipewire.enable [ pkgs.asahi-audio ];
+        wireplumber.configPackages = lib.optionals config.services.pipewire.wireplumber.enable [
+          pkgs.asahi-audio
+        ];
+      };
+
+      # enable speakersafetyd to protect speakers
+      systemd.packages = lib.optionals (config.services.pipewire.enable or config.hardware.alsa.enable) [ pkgs.speakersafetyd ];
+      services.udev.packages = lib.optionals (config.services.pipewire.enable or config.hardware.alsa.enable) [ pkgs.speakersafetyd ];
     };
 
   options.hardware.asahi = {
