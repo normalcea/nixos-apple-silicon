@@ -26,7 +26,10 @@
 
       devShells = forAllSystems (system: {
         default = inputs.nixpkgs.legacyPackages.${system}.mkShellNoCC {
-          packages = [ outputs.formatter.${system} ];
+          packages = [
+            outputs.formatter.${system}
+            inputs.nixpkgs.legacyPackages.${system}.mdbook
+          ];
         };
       });
 

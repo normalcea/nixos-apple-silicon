@@ -1,0 +1,5 @@
+[book]
+authors = ["Jasi"]
+language = "en"
+src = "docs"
+title = "NixOS Apple Silicon"

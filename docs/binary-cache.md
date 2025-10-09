@@ -6,7 +6,7 @@ Our GitHub Actions workflow builds all of the declared `packages` every time the
 
 If you decide to use the nixos-apple-silicon binary cache, you can use the following configuration snippet:
 
-```
+```nix
   nix.settings = {
     extra-substituters = [
       "https://nixos-apple-silicon.cachix.org"

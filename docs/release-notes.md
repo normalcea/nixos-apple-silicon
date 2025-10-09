@@ -1,6 +1,6 @@
 # Release Notes
 
-This file contains important information for each release.
+<!-- This file contains important information for each release. -->
 
 ## 2025-08-23
 
