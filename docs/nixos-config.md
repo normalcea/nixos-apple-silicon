@@ -3,6 +3,7 @@
 The subsequent steps in this section will help you install NixOS onto your new partitions. More information is available in the Installing section of the [NixOS manual](https://nixos.org/manual/nixos/stable/index.html#sec-installation-installing). Some changes to the configuration procedure as described in that manual are needed for NixOS on Apple Silicon to work properly.
 
 Create a default configuration for the new system, then copy the Apple Silicon support module into it:
+
 ```nix
 nixos# nixos-generate-config --root /mnt
 nixos# cp -r /etc/nixos/apple-silicon-support /mnt/etc/nixos/
@@ -10,11 +11,13 @@ nixos# chmod -R +w /mnt/etc/nixos/
 ```
 
 Use Nano to edit the configuration of the new system to include the Apple Silicon support module. Be aware that other editors and most documentation has been left out of the bootstrap installer to save space and time.
+
 ```shellsession
 nixos# nano /mnt/etc/nixos/configuration.nix
 ```
 
 Add the `./apple-silicon-support` directory to the imports list and switch off the `canTouchEfiVariables` option. That portion of the file should look like this:
+
 ```nix
   imports =
     [ # Include the results of the hardware scan.
@@ -42,6 +45,7 @@ Currently, the only supported way to update the peripheral firmware files is to 
 ```
 
 Some keyboard layouts are not detected correctly. On some devices, the \` key is swapped with `<`, and `~` with `>`. The layout can be fixed by setting options in `boot.extraModprobeConfig`. Which option needs to be set depends on your hardware keyboard's layout (see: [Arch Wiki - Apple Keyboard](https://wiki.archlinux.org/title/Apple_Keyboard)).
+
  ```nix
  # For ` to < and ~ to > (for those with US keyboards)
  boot.extraModprobeConfig = ''
@@ -50,6 +54,7 @@ Some keyboard layouts are not detected correctly. On some devices, the \` key is
  ```
 
 Use iwd in the configuration instead of wpa_supplicant because the latter [does not support WPA3 on broadcom chips](https://www.reddit.com/r/AsahiLinux/comments/12igyoa/comment/jftvl3c)
+
 ```nix
 networking.wireless.iwd = {
   enable = true;
@@ -58,6 +63,7 @@ networking.wireless.iwd = {
 ```
 
 ## NixOS Installation
+
 Once complete, reboot the system:
 
 ```shellsession

@@ -16,7 +16,8 @@ NixOS can be completely uninstalled by deleting the stub partition, EFI system p
 Boot back into macOS by shutting down the machine fully, then pressing and holding the power button until the boot picker comes up. Select the macOS installation, then click Continue to boot it. Log into an administrator account and open Terminal.app.
 
 Identify the partitions to remove. In this example, `disk0s3` is the stub because of its small size. `disk0s4` is the EFI system partition and `disk0s5` is the root partition:
-```
+
+```shellsession
 % diskutil list disk0
 /dev/disk0 (internal):
    #:                       TYPE NAME                    SIZE       IDENTIFIER
@@ -32,7 +33,8 @@ Identify the partitions to remove. In this example, `disk0s3` is the stub becaus
 WARNING: Unlike Linux, on macOS each partition's identifier does not necessarily equal its partition index. Double check the identifiers of your own system!
 
 Remove the EFI system partition and root partition:
-```
+
+```shellsession
 % diskutil eraseVolume free free disk0s4
 Started erase on disk0s4 (EFI - NIXOS)
 Unmounting disk
@@ -44,7 +46,8 @@ Finished erase on disk0
 ```
 
 Remove the stub partition:
-```
+
+```shellsession
 % diskutil apfs deleteContainer disk0s3
 Started APFS operation on disk3
 Deleting APFS Container with all of its APFS Volumes
@@ -53,7 +56,8 @@ Removing disk0s3 from partition map
 ```
 
 Expand the main macOS partition to use the resulting free space. This command will take a few minutes to run; do not attempt to use the machine while it is in progress:
-```
+
+```shellsession
 % diskutil apfs resizeContainer disk0s2 0
 Started APFS operation
 Aligning grow delta to 94,662,586,368 bytes and targeting a new physical store size of 994,662,584,320 bytes

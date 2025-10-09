@@ -9,10 +9,12 @@ curl https://alx.sh | sh
 ```
 
 Choose the following options to get started:
+
 * Enter your administrator password
 * Do not enable expert mode
 
 Resize your existing macOS install:
+
 * Resize an existing partition to make space for a new OS (`r`)
 * Enter the new size of the macOS install. It should be at least 20GB less than its current size to make room for NixOS with a GUI (note that here 1GB = 1,000,000,000 bytes)
 * Confirm the resize operation
@@ -20,6 +22,7 @@ Resize your existing macOS install:
 * Press enter when finished
 
 Install UEFI environment:
+
 * Install an OS into free space (`f`)
 * UEFI environment only
 * Name it NixOS (this is what shows up in the firmware boot picker)

@@ -9,7 +9,8 @@ If something is seriously wrong and the bootloader does not work (or you don't h
 Once in the installer, you can re-mount your root partition and EFI system partition without reformatting them. Depending on what exactly went wrong, you might need to edit your configuration, copy over the latest Apple Silicon support module, or update U-Boot using the latest installer.
 
 Rerunning the installer will create a new generation but not touch any user data. This means you can "undo" the installation by selecting a previous generation in the bootloader. To redo the installation without changing your root password or changing the version of Nixpkgs, run:
-```
+
+```shellsession
 # nixos-install --no-root-password --no-channel-copy
 ```
 
@@ -28,7 +29,7 @@ You may have to reboot after updating in some cases. If something goes wrong, yo
 
 ## Apple Silicon Support Updates
 
-To update the Apple Silicon support module, including the Asahi kernel and U-Boot, you can simply download newer files from this repo under `apple-silicon-support` and place them under `/etc/nixos/apple-silicon-support`. 
+To update the Apple Silicon support module, including the Asahi kernel and U-Boot, you can simply download newer files from this repo under `apple-silicon-support` and place them under `/etc/nixos/apple-silicon-support`.
 
 U-Boot and m1n1 are automatically managed by NixOS' bootloader system. If you roll back to a previous generation and things do not work properly due to a device tree incompatibility, you can run `/run/current-system/bin/switch-to-configuration switch` then reboot to force the bootloader and the correct version of U-Boot/m1n1 to be reinstalled and loaded.
 

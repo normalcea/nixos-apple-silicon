@@ -66,6 +66,7 @@ Microphone support is now available for users using macOS firmare version 13.5
 version can be checked with `cat /proc/device-tree/chosen/asahi,os-fw-version`.
 
 To upgrade it:
+
 * Take a backup of any macOS and Linux data you do not want to lose in case of
   problems
 * Delete the macOS stub and EFI partitions ONLY, NOT the root partition
@@ -243,7 +244,7 @@ This release updates nixpkgs, the kernel, and m1n1.
 fix in the previous release was incomplete. See the previous release notes
 for further info.
 
-**All users are recommended to upgrade m1n1 from macOS** using the instructions 
+**All users are recommended to upgrade m1n1 from macOS** using the instructions
 available
 [here](https://discussion.fedoraproject.org/t/important-psa-update-your-m1n1-before-updating-to-macos-sonoma-14-5/117192).
 The referenced stage 2 work arounds are also included in this release.
@@ -253,6 +254,7 @@ The referenced stage 2 work arounds are also included in this release.
 This release updates nixpkgs and the kernel.
 
 **This release fixes a data corruption bug for dm-crypt users.**
+
 * The bug apparently only affects dm-crypt block devices and was introduced in
   the 6.8 kernel update in release 2024-04-27. Users who don't use dm-crypt, or
   who haven't upgraded to 2024-04-27 or 2024-05-14, are not at risk.
@@ -348,6 +350,7 @@ to address specific issues are welcome.
 This release updates nixpkgs.
 
 This release corrects a few minor issues:
+
 * Resolves an error that flakes were not enabled when running `nixos-install`
 * Updates to avoid using a nixpkgs version that was not from the nixos-unstable
   channel
@@ -407,18 +410,14 @@ This release updates nixpkgs and includes the necessary components for full
 sound support, namely speakersafetyd, bankstown-lv2, and asahi-audio.
 
 New features and fixes:
+
 * Full speaker and headphone support is finally here! (on supported machines and
   nixpkgs versions)
-  * You will need at least `sound.enable = true;` in your configuration.
-  * Sound support relies on PipeWire, which is automatically enabled by the
-    apple-silicon-support module. You must remove any
-    `hardware.pulseaudio.enable = true;` from your configuration, or building
-    it will fail. PipeWire's PulseAudio compatibility module is enabled by
-    default.
-  * Thanks to yu-re-ka and diamondburned for helping with this support.
-* Kernel config is now synced with and will track Fedora Asahi Remix's Apple
-  Silicon-specific changes
-  * This fixes a missing option which broke GPU acceleration on M2 hardware.
+   * You will need at least `sound.enable = true;` in your configuration.
+   * Sound support relies on PipeWire, which is automatically enabled by the apple-silicon-support module. You must remove any `hardware.pulseaudio.enable = true;` from your configuration, or building it will fail. PipeWire's PulseAudio compatibility module is enabled by default.
+      * Thanks to yu-re-ka and diamondburned for helping with this support.
+* Kernel config is now synced with and will track Fedora Asahi Remix's Apple Silicon-specific changes
+   * This fixes a missing option which broke GPU acceleration on M2 hardware.
 
 ## 2023-12-19
 
@@ -454,25 +453,16 @@ Speaker support will be added in an upcoming release.
 This release updates nixpkgs, m1n1, U-Boot, and the kernel.
 
 Some exciting new features are now available:
+
 * ALSA configuration module to enable the headphone jack on supported devices
-  * You will need at least `sound.enable = true;` and
-    `hardware.pulseaudio.enable = true;` in your configuration.nix to enable
-    sound for the system.
-  * Speakers will still not be enabled.
-  * Thanks to IonAgorria and yusefnapora for this contribution.
+   * You will need at least `sound.enable = true;` and `hardware.pulseaudio.enable = true;` in your configuration.nix to enable sound for the system.
+   * Speakers will still not be enabled.
+   * Thanks to IonAgorria and yusefnapora for this contribution.
 * Built-in webcam support for supported devices
-  * The webcam should work without additional configuration in applications like
-    Firefox or desktop camera viewers.
-  * To avoid an overly-dark image and other image quality issues, the ISP
-    firmware needs to be added to `all_firmware.tar.gz` within the peripheral
-    firmware directory. This can be done by inserting
-    `/usr/sbin/appleh13camerad` from macOS into the archive's root. Stub
-    partitions created with the Asahi installer after this release should
-    already have the file but older installations must be upgraded manually.
-    This will hopefully be done automatically in a future release.
+   * The webcam should work without additional configuration in applications like Firefox or desktop camera viewers.
+   * To avoid an overly-dark image and other image quality issues, the ISP firmware needs to be added to `all_firmware.tar.gz` within the peripheral firmware directory. This can be done by inserting `/usr/sbin/appleh13camerad` from macOS into the archive's root. Stub partitions created with the Asahi installer after this release should already have the file but older installations must be upgraded manually. This will hopefully be done automatically in a future release.
 * Official support for M2-series devices
-  * Please leave feedback if issues are encountered. I don't have any way to
-    test this support with NixOS.
+   * Please leave feedback if issues are encountered. I don't have any way to test this support with NixOS.
 
 ## 2023-09-17
 
@@ -614,6 +604,7 @@ This release updates nixpkgs and reorganizes the project. There have been no
 changes to Asahi's stable package versions since the last release.
 
 To upgrade (assuming you used the standard installation instructions):
+
 * Remove `/etc/nixos/m1-support`
 * Procure the `apple-silicon-support` directory from the repo and place it in
   `/etc/nixos/apple-silicon-support`
@@ -644,6 +635,7 @@ These were a result of Nixpkgs' upgrade to Rust 1.66.
 This release also adds an option `hardware.asahi.experimentalGPUInstallMode` to
 select the way in which the experimental GPU driver is installed.
 There are three choices:
+
 * `driver`: install only as a driver, do not replace system Mesa. Causes issues
   with certain programs like Plasma Wayland.
 * `replace` (the default): use `system.replaceRuntimeDependencies` to replace
@@ -689,13 +681,9 @@ to crash after entering a Wi-Fi password.
 Support for Rust in the kernel, the Asahi edge kernel config, and the
 experimental Mesa driver are now included as NixOS options.
 
-* Enable the option `hardware.asahi.withRust` to build the kernel with the
-Rust toolchain present. GCC is still used for the kernel's C code.
-* Enable the option `hardware.asahi.addEdgeKernelConfig` to add the official
-Asahi edge kernel configuration options. This implies the previous option.
-* Enable the option `hardware.asahi.useExperimentalGPUDriver` to switch the
-system version of Mesa to the Asahi project's fork which includes experimental
-support for the Apple Silicon GPU. This implies the previous two options.
+* Enable the option `hardware.asahi.withRust` to build the kernel with the Rust toolchain present. GCC is still used for the kernel's C code.
+* Enable the option `hardware.asahi.addEdgeKernelConfig` to add the official Asahi edge kernel configuration options. This implies the previous option.
+* Enable the option `hardware.asahi.useExperimentalGPUDriver` to switch the system version of Mesa to the Asahi project's fork which includes experimental support for the Apple Silicon GPU. This implies the previous two options.
 
 Please note that, as outlined in the
 [official blog post](https://asahilinux.org/2022/12/gpu-drivers-now-in-asahi-linux/),

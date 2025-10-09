@@ -10,7 +10,6 @@ To start the procedure, hook up the appropriate port on your unbootable Mac to t
 
 If DFU mode was started correctly, the unbootable Mac will show up on your second computer as an `Apple, Inc. Mobile Device (DFU Mode)` in `lsusb` on Linux or System Information on macOS. If you see `Apple, Inc. Apple Mobile Device [Recovery Mode]` instead (or nothing), the procedure was not followed correctly and you need to try again.
 
-
 Open a terminal on your second computer. You need `usbmuxd` (only if on Linux) and `idevicerestore`. nixpkgs (both unstable and stable) provide sufficiently updated package versions. If you're on NixOS, set `services.usbmuxd.enable = true;` to get udev rules, system services etc. configured. If you're on another Linux, you need to run `usbmuxd` as root in the background, without any arguments (or manually set up udev rules and system services).
 
 Then, ask `idevicerestore` to restore the firmware by using the `--latest` flag. If you wish to erase the disk either because the revive didn't work or because you want to start with a clean slate, use the `--erase` flag also.
@@ -36,7 +35,8 @@ Once the restore process starts, the progress bar will start moving and `idevice
 Otherwise, wait patiently while the restore proceeds. Expect it to take 20 or 30 minutes. Eventually `idevicerestore` will say `DONE` and the formerly-unbootable Mac will reboot and start recovery mode (if erasing was not necessary) or the out-of-the-box wizard (if the disk was erased) and you can use it again.
 
 Finally, shut down `usbmuxd` if on Linux and you started it manually. To clean up your second computer, remove the downloaded firmware, the `idevicerestore` and `usbmuxd` GC roots, and run the Nix garbage collector:
-```
+
+```shellsession
 # sudo killall usbmuxd # if on Linux
 # sudo rm -rf *.ipsw* UniversalMac*
 # rm -f result* usbmuxd idevicerestore

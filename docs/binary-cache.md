@@ -17,7 +17,7 @@ If you decide to use the nixos-apple-silicon binary cache, you can use the follo
   };
 ```
 
-#### Who are you trusting by adding this binary cache?
+## Who are you trusting by adding this binary cache
 
 When using additional substituters in Nix/NixOS, you always trust the actors who are involved or have access to the infrastructure for populating the binary cache. No matter which packages you intend to substitute over a binary cache, you should always assume that any of the involved people could gain remote `root`-level access to your system.
 

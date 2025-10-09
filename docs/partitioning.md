@@ -26,19 +26,19 @@ nixos# systemctl restart systemd-timesyncd
 
 Start the Mac, and U-Boot should start booting from the USB drive automatically. If you've already installed something to the internal NVMe drive, U-Boot will try to boot it first. To instead boot from USB, hit a key to stop autoboot when prompted, then run the command `bootmenu` and select the `usb 0` entry. If no entries are available, exit and use `bootmenu -e` instead. If this command is not available, instead use `env set boot_efi_bootmgr ; run bootcmd_usb0`. GRUB will start, then the NixOS installer after a short delay (the default GRUB option is fine).
 
-<details>
-  <summary>If "mounting `/dev/root` on `/mnt-root/iso` failed: No such file or directory" during boot…</summary>
-  
-  1. Was the ISO transferred to your flash drive correctly as described above? `dd` is the only correct way to do this. The ISO must be transferred to the drive block device itself, not a partition on the drive.
-  2. There is sometimes a [race condition](https://github.com/nix-community/nixos-apple-silicon/issues/60) which causes booting to fail. Reboot the machine and try again.
-  3. Some flash drives have quirks. Try a different drive, or use the following steps:
+### Troubleshooting
+
+If "mounting `/dev/root` on `/mnt-root/iso` failed: No such file or directory" during boot…</summary>
+
+1. Was the ISO transferred to your flash drive correctly as described above? `dd` is the only correct way to do this. The ISO must be transferred to the drive block device itself, not a partition on the drive.
+1. There is sometimes a [race condition](https://github.com/nix-community/nixos-apple-silicon/issues/60) which causes booting to fail. Reboot the machine and try again.
+1. Some flash drives have quirks. Try a different drive, or use the following steps:
 
       1. Attempt to start the installer normally
       1. When the boot fails and you are prompted, hit i to start a shell
       1. Unplug your flash drive, plug it into a different port, then wait 30 seconds
       1. Run the command `mount -t iso9660 /dev/root /mnt-root/iso`
       1. Exit the shell by running `exit` to continue the boot process
-</details>
 
 You will get a console prompt once booting completes. Run the command `sudo su` to get a root prompt in the installer. If the console font is too small, run the command `setfont ter-v32n` to increase the size.
 
@@ -49,17 +49,19 @@ You will get a console prompt once booting completes. Run the command `sudo su` 
 We will add a root partition to the remaining free space and format it as ext4. Alternative partition layouts and filesystems, including LUKS encryption, are possible, but not covered by this guide.
 
 Create the root partition to fill up the free space:
-```
+
+```shellsession
 nixos# sgdisk /dev/nvme0n1 -n 0:0 -s
 [...]
 The operation has completed successfully.
 ```
 
 Identify the number of the new root partition (type code 8300, typically second to last):
-```
+
+```shellsession
 nixos# sgdisk /dev/nvme0n1 -p
 Disk /dev/nvme0n1: 244276265 sectors, 931.8 GiB
-Model: APPLE SSD AP1024Q                       
+Model: APPLE SSD AP1024Q
 Sector size (logical/physical): 4096/4096 bytes
 Disk identifier (GUID): 27054D2E-307A-41AA-9A8C-3864D56FAF6B
 Partition table holds up to 128 entries
@@ -78,11 +80,13 @@ Number  Start (sector)    End (sector)  Size       Code  Name
 ```
 
 Format the new root partition:
-```
+
+```shellsession
 nixos# mkfs.ext4 -L nixos /dev/nvme0n1p5
 ```
 
 Mount the root partition, then the EFI system partition that was created by the Asahi Linux installer specifically for NixOS:
+
 ```nix
 nixos# mount /dev/disk/by-label/nixos /mnt
 nixos# mkdir -p /mnt/boot
