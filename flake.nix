@@ -19,7 +19,27 @@
       forAllSystems = inputs.nixpkgs.lib.genAttrs systems;
     in
     {
-      formatter = forAllSystems (system: inputs.nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      formatter = forAllSystems (
+        system:
+        inputs.nixpkgs.legacyPackages.${system}.nixfmt-tree.override {
+          runtimeInputs = [
+            inputs.nixpkgs.legacyPackages.${system}.mdl
+          ];
+
+          settings = {
+            formatter."markdownlint" = {
+              command = "mdl";
+              options = [
+                "-r"
+                # MD013: disable line length rule
+                # MD014: allow not having output in shell commands
+                "~MD013,~MD014"
+              ];
+              includes = [ "*.md" ];
+            };
+          };
+        }
+      );
       checks = forAllSystems (system: {
         formatting = outputs.formatter.${system};
       });
