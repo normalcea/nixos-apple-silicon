@@ -58,6 +58,12 @@
 
           linux-asahi = pkgs.linux-asahi.kernel;
 
+          nas-manual =
+            let
+              version = self.dirtyShortRev or self.shortRev;
+            in
+            pkgs.nas-manual.override { inherit version; };
+
           installer-bootstrap =
             let
               installer-system = inputs.nixpkgs.lib.nixosSystem {
