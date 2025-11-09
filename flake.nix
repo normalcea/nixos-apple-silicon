@@ -19,7 +19,19 @@
       forAllSystems = inputs.nixpkgs.lib.genAttrs systems;
     in
     {
-      formatter = forAllSystems (system: inputs.nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      formatter = forAllSystems (
+        system:
+        inputs.nixpkgs.legacyPackages.${system}.nixfmt-tree.override {
+          runtimeInputs = [ inputs.nixpkgs.legacyPackages.${system}.prettier ];
+
+          settings.formatter."prettier" = {
+            command = "prettier";
+            options = [ "--write" ];
+            includes = [ "*.css" ];
+          };
+        }
+      );
+
       checks = forAllSystems (system: {
         formatting = outputs.formatter.${system};
       });

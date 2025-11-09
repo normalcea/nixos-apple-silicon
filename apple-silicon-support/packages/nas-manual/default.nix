@@ -31,10 +31,12 @@ let
         -o $out/share/doc/nixos-apple-silicon/nixos-apple-silicon.txt
       makeinfo nixos-apple-silicon.texi \
         --html \
+        --css-ref=static/manual.css \
         --no-split \
         -o $out/share/doc/nixos-apple-silicon/nixos-apple-silicon.html
       makeinfo nixos-apple-silicon.texi \
         --html \
+        --css-ref=../static/manual.css \
         -o $out/share/doc/nixos-apple-silicon/html.d
 
       cp -r static $out/share/doc/nixos-apple-silicon
