@@ -8,9 +8,11 @@ Please see the documentation and guide below to get started.
 
 ## Documentation
 
-* [Release Notes](docs/release-notes.md)
-* [Binary Cache](docs/binary-cache.md)
-* [Setup, Installation, and Maintenance Guide (2025-11-18)](docs/uefi-standalone.md)
+To read the installation/maintenance manual, use an existing Nix installation to open a page in your web browser displaying the manual.
+
+```shellsession
+$ nix --extra-experimental-features "nix-command flakes" run github:nix-community/nixos-apple-silicon#nas-manual
+```
 
 ## Credits
 
