@@ -9,7 +9,7 @@ We aim to generally replicate the experience and software configuration/versions
 To read the installation/maintenance manual, use an existing Nix installation to open a page in your web browser displaying the manual.
 
 ```shellsession
-$ nix --extra-experimental-features "nix-command flakes" run github:nix-community/nixos-apple-silicon
+$ nix --extra-experimental-features "nix-command flakes" run github:nix-community/nixos-apple-silicon#nas-manual
 ```
 
 ## Credits

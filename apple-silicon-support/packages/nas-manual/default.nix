@@ -79,13 +79,30 @@ let
       fi
     '';
   };
+
+  startScriptWebDarwin =
+    if stdenvNoCC.hostPlatform.isDarwin then
+      writeShellApplication {
+        name = "start-manual-web";
+
+        text = ''
+          if [[ $# -lt 1 ]]; then
+             echo "[Note]: Run this script with any positional arguments to access the split web manual."
+             open ${manual}/share/doc/nixos-apple-silicon/nixos-apple-silicon.html
+          else
+             open ${manual}/share/doc/nixos-apple-silicon/html.d/index.html
+          fi
+        '';
+      }
+    else
+      null;
 in
 symlinkJoin {
   name = "nas-manual";
   paths = [
     manual
     startScriptInfo
-    startScriptWeb
+    (if !stdenvNoCC.hostPlatform.isDarwin then startScriptWeb else startScriptWebDarwin)
   ];
 
   meta = manual.meta // {
