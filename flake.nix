@@ -72,6 +72,8 @@
 
           nas-manual = pkgs.nas-manual.override { version = self.dirtyShortRev or self.shortRev; };
 
+          default = outputs.packages.${system}.nas-manual;
+
           installer-bootstrap =
             let
               installer-system = inputs.nixpkgs.lib.nixosSystem {
