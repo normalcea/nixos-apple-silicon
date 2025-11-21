@@ -174,6 +174,18 @@ There are multiple ways to obtain an installation ISO, either from
 downloading a pre-built version or building one yourself from source
 using Nix. This guide goes over both ways.
 
+@quotation Note
+If the installed NixOS version matches the version used by the
+installer (the default if not using flakes), and if the installer has
+not been cross-compiled (the default for official releases), the
+kernel will be copied over from the installer. Otherwise, the system
+will attempt to build the kernel in the installer environment which is
+generally not possible due to memory limitations. If the system will
+not install due to this, consider enabling the binary cache
+(@xref{Binary cache}), changing nixpkgs versions temporarily, or
+building/downloading a machine-native installer
+@end quotation
+
 @subsection Downloading the ISO directly
 
 You can download a pre-built installation ISO from the NixOS Apple
@@ -321,9 +333,9 @@ NVMe drive, U-Boot will try to boot it first. To instead boot from
 USB, hit a key to stop autoboot when prompted, then run the command
 `bootmenu` and select the `usb 0` entry. If no entries are available,
 exit and use `bootmenu -e` instead. If this command is not available,
-instead use `env set boot_efi_bootmgr ; run bootcmd_usb0`. GRUB will
-start, then the NixOS installer after a short delay (the default GRUB
-option is fine).
+instead use `setenv boot_targets "usb" ; setenv bootmeths "efi" ;
+boot`. GRUB will start, then the NixOS installer after a short delay
+(the default GRUB option is fine).
 
 @subsection Troubleshooting
 
@@ -657,10 +669,10 @@ you don't have any other generations), you will want to get back into
 the installer. To start the installer with a system installed on the
 internal disk, shut down the computer, re-insert the USB drive with
 the installer, start it up again, hit a key in U-Boot when prompted to
-stop autoboot, then run the command bootmenu and select the @code{usb 0}
-entry. If no entries are available, exit and use @code{bootmenu -e} instead.
-If this command is not available, instead use @code{env set boot_efi_bootmgr
-; run bootcmd_usb0}.
+stop autoboot, then run the command @code{bootmenu} and select the
+@code{usb 0} entry. If no entries are available, exit and use
+@code{bootmenu -e} instead. If this command is not available, instead
+use @code{setenv boot_targets "usb" ; setenv bootmeths "efi" ; boot}.
 
 Once in the installer, you can re-mount your root partition and EFI
 system partition without reformatting them. Depending on what exactly
