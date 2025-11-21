@@ -1,7 +1,9 @@
 \input texinfo
 @setfilename nixos-apple-silicon-manual
 @settitle NixOS Apple Silicon
-@set VERSION 2025-11-18
+@set VERSION release-2025-11-18
+@set DEVELOPMENT
+@set FORGE_URL https://github.com/nix-community/nixos-apple-silicon
 @set MAINTAINERS @@tpwrules, @@flokli, @@yuyuyureka
 @set BUG_TRACKER @url{https://github.com/nix-community/nixos-apple-silicon/issues, Bug Tracker}
 @set RELEASES_MIRROR @url{https://github.com/nix-community/nixos-apple-silicon/releases, GitHub Releases}
@@ -57,7 +59,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 This manual explains how to install and maintain a NixOS system on
 Apple Silicon hardware.
 
-The version of the manual you are reading is @value{VERSION}.
+The version of the manual you are reading is @value{VERSION}
+
+@ifset DEVELOPMENT
+@quotation Note
+This is a development version of this manual and may not be accurate
+to the latest tagged release (@value{VERSION}).
+@end quotation
+@end ifset
 
 @menu
 * Installation::            Installing NixOS Apple Silicon
@@ -222,9 +231,9 @@ appropriate release (you may also choose to build directly from the
 guide).
 
 @example
-git clone https://github.com/nix-community/nixos-apple-silicon
+git clone @value{FORGE_URL}
 cd nixos-apple-silicon
-git checkout release-@value{VERSION}
+git checkout @value{VERSION}
 @end example
 
 The configuration for the ISO is located in
@@ -986,6 +995,13 @@ functionality. It does not need installer testing, nor a release date
 update or tag. The PR should be approved by at least one other
 maintainer or contributor before merging, though it does not need to
 be tested on multiple machine types.
+
+Finally, the NixOS Apple Silicon manual is updated to the specified
+release date before creating a new release tag. In a following commit
+post-release, the manual's version and release notes are updated to
+that release plus a ``-next'' suffix to prepare for new changes for
+the following release which can be added incrementally as they are
+implemented.
 
 @subsection Testing
 @enumerate

@@ -3,6 +3,8 @@
 
 @comment This file contains important information for each release.
 
+@heading 2025-11-18-next
+
 @heading 2025-11-18
 
 This release drops every custom package except the kernel and U-Boot.
