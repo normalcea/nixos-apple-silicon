@@ -9,7 +9,7 @@
 let
   manual = stdenvNoCC.mkDerivation (finalAttrs: {
     pname = "nixos-apple-silicon-manual";
-    version = "2025-08-23";
+    version = "2025-11-18";
 
     src = ./.;
 
