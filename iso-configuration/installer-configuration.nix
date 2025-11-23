@@ -70,6 +70,9 @@
 
   isoImage.squashfsCompression = "zstd -Xcompression-level 6";
 
+  programs.git.enable = true;
+  programs.git.package = pkgs.gitMinimal;
+
   environment.systemPackages = with pkgs; [
     gptfdisk
     parted
