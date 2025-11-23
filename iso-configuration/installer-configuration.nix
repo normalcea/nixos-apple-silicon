@@ -85,14 +85,11 @@
   hardware.enableRedistributableFirmware = lib.mkForce false;
   system.extraDependencies = lib.mkForce [ ];
 
-  # Disable wpa_supplicant because it can't use WPA3-SAE on broadcom chips that are used on macs and it is harder to use and less mainained than iwd in general
-  networking.wireless.enable = false;
-  # Enable iwd
   networking.wireless.iwd = {
     enable = true;
     settings.General.EnableNetworkConfiguration = true;
   };
-  networking.networkmanager.enable = lib.mkForce false;
+  networking.networkmanager.wifi.backend = "iwd";
 
   # let user know to use iwctl to get access to iwd
   services.getty.helpLine = lib.mkForce ''
