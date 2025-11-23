@@ -83,8 +83,6 @@
   # save space and compilation time. might revise?
   hardware.enableAllFirmware = lib.mkForce false;
   hardware.enableRedistributableFirmware = lib.mkForce false;
-  services.pulseaudio.enable = false;
-  hardware.asahi.setupAsahiSound = false;
   system.extraDependencies = lib.mkForce [ ];
 
   # Disable wpa_supplicant because it can't use WPA3-SAE on broadcom chips that are used on macs and it is harder to use and less mainained than iwd in general
