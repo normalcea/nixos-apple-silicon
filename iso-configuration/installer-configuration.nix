@@ -81,6 +81,30 @@
     wget
     wormhole-william
     nas-manual
+    (
+      (emacs.override {
+        withNativeCompilation = false;
+        noGui = true;
+        withCsrc = false;
+        withDbus = false;
+        withGpm = false;
+        withMailutils = false;
+        withSelinux = false;
+        withSQLite3 = false;
+        withSystemd = false;
+        withToolkitScrollBars = false;
+        withTreeSitter = false;
+        withWebP = false;
+        withSmallJaDic = true;
+      }).pkgs.withPackages
+      (
+        epkgs: with epkgs; [
+          vterm
+          magit
+          nix-mode
+        ]
+      )
+    )
   ];
 
   # save space and compilation time. might revise?
