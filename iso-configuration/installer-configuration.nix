@@ -92,7 +92,7 @@
     enable = true;
     settings.General.EnableNetworkConfiguration = true;
   };
-  networking.networkmanager.enable = lib.mkForce false;
+  networking.networkmanager.wifi.backend = "iwd";
 
   # let user know to use iwctl to get access to iwd
   services.getty.helpLine = lib.mkForce ''
