@@ -105,32 +105,34 @@
     To set up a wireless connection, run `iwctl`.
   '';
 
-  nixpkgs.overlays = lib.optionals (config.nixpkgs.hostPlatform.system != config.nixpkgs.buildPlatform.system) [
-    (final: prev: {
-      # disabling pcsclite avoids the need to cross-compile gobject
-      # introspection stuff which works now but is slow and unnecessary
-      libfido2 = prev.libfido2.override {
-        withPcsclite = false;
-      };
-      openssh = prev.openssh.overrideAttrs (old: {
-        # we have to cross compile openssh ourselves for whatever reason
-        # but the tests take quite a long time to run
-        doCheck = false;
-      });
+  nixpkgs.overlays =
+    lib.optionals (config.nixpkgs.hostPlatform.system != config.nixpkgs.buildPlatform.system)
+      [
+        (final: prev: {
+          # disabling pcsclite avoids the need to cross-compile gobject
+          # introspection stuff which works now but is slow and unnecessary
+          libfido2 = prev.libfido2.override {
+            withPcsclite = false;
+          };
+          openssh = prev.openssh.overrideAttrs (old: {
+            # we have to cross compile openssh ourselves for whatever reason
+            # but the tests take quite a long time to run
+            doCheck = false;
+          });
 
-      # avoids having to compile a bunch of big things (like texlive) to
-      # compute translations
-      util-linux = prev.util-linux.override {
-        translateManpages = false;
-      };
+          # avoids having to compile a bunch of big things (like texlive) to
+          # compute translations
+          util-linux = prev.util-linux.override {
+            translateManpages = false;
+          };
 
-      # avoids broken cross-compilation
-      # https://github.com/NixOS/nixpkgs/pull/460394/
-      libcap = prev.libcap.override {
-        withGo = false;
-      };
-    })
-  ];
+          # avoids broken cross-compilation
+          # https://github.com/NixOS/nixpkgs/pull/460394/
+          libcap = prev.libcap.override {
+            withGo = false;
+          };
+        })
+      ];
 
   # avoids the need to cross-compile gobject introspection stuff which works
   # now but is slow and unnecessary
