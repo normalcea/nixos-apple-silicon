@@ -94,17 +94,6 @@
   };
   networking.networkmanager.wifi.backend = "iwd";
 
-  # let user know to use iwctl to get access to iwd
-  services.getty.helpLine = lib.mkForce ''
-    The "nixos" and "root" accounts have empty passwords.
-
-    To log in over ssh you must set a password for either "nixos" or "root"
-    with `passwd` (prefix with `sudo` for "root"), or add your public key to
-    /home/nixos/.ssh/authorized_keys or /root/.ssh/authorized_keys.
-
-    To set up a wireless connection, run `iwctl`.
-  '';
-
   nixpkgs.overlays =
     lib.optionals (config.nixpkgs.hostPlatform.system != config.nixpkgs.buildPlatform.system)
       [
