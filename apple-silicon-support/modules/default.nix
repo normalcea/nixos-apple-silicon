@@ -90,7 +90,7 @@
           <application name="${bin} Wrapped" executable=".${bin}-wrapped">
              <option name="force_gl_renderer" value="AGX G1Nx"/>
           </application>
-        '') cfg.webSecurityCompat
+        '') (cfg.webSecurityCompat ++ cfg.extraBrowsers)
       ))
       + ''
           </device>
@@ -142,6 +142,14 @@
         The default list contains a best-effort collection of
         web-browsers, if a browser you use is not listed here, append
         its browser binary here.
+      '';
+    };
+
+    extraBrowsers = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = ''
+        Additional browsers to append to the mesa workaround.
       '';
     };
 
