@@ -1,14 +1,15 @@
 {
   self ? import ./. { },
   sources ? import ./npins,
+  nixpkgs ? sources.nixpkgs,
   system ? builtins.currentSystem,
   crossSystem ? "aarch64-linux",
-  pkgs ? import sources.nixpkgs {
+  pkgs ? import nixpkgs {
     inherit system;
     config = { };
     overlays = [ ];
   },
-  crossCompPkgs ? import sources.nixpkgs {
+  crossCompPkgs ? import nixpkgs {
     crossSystem.system = crossSystem;
     localSystem.system = system;
     config = { };
