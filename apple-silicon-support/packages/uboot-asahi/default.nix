@@ -2,7 +2,6 @@
   lib,
   fetchFromGitHub,
   buildUBoot,
-  m1n1,
 }:
 
 (buildUBoot rec {
@@ -19,7 +18,6 @@
   extraMeta.platforms = [ "aarch64-linux" ];
   filesToInstall = [
     "u-boot-nodtb.bin.gz"
-    "m1n1-u-boot.bin"
   ];
   extraConfig = ''
     CONFIG_IDENT_STRING=" ${version}"
@@ -30,17 +28,11 @@
     CONFIG_CMD_BOOTMENU=y
   '';
 }).overrideAttrs
-  (o: {
-    # nixos's downstream patches are not applicable
-    patches = [
-    ];
-
-    # DTC= flag somehow breaks DTC compilation so we remove it
-    makeFlags = builtins.filter (s: (!(lib.strings.hasPrefix "DTC=" s))) o.makeFlags;
-
+  (oldAttrs: {
+    # # DTC= flag somehow breaks DTC compilation so we remove it
+    makeFlags = lib.filter (s: (!(lib.strings.hasPrefix "DTC=" s))) oldAttrs.makeFlags;
+    # compress so that m1n1 knows U-Boot's size and can find things after it
     preInstall = ''
-      # compress so that m1n1 knows U-Boot's size and can find things after it
       gzip -n u-boot-nodtb.bin
-      cat ${m1n1}/lib/m1n1/m1n1.bin arch/arm/dts/t[68]*.dtb u-boot-nodtb.bin.gz > m1n1-u-boot.bin
     '';
   })

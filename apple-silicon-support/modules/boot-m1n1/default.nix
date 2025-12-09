@@ -15,9 +15,7 @@ let
     else
       pkgs'.m1n1;
 
-  bootUBoot = pkgs'.uboot-asahi.override {
-    m1n1 = bootM1n1;
-  };
+  bootUBoot = pkgs'.uboot-asahi;
 
   bootFiles = {
     "m1n1/boot.bin" = pkgs.runCommand "boot.bin" { } ''
