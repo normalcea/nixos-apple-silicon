@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-compat.url = "github:nix-community/flake-compat";
   };
 
   outputs =
@@ -11,6 +10,10 @@
     let
       inherit (self) outputs;
       # build platforms supported for uboot in nixpkgs
+      nasImported = import ./. {
+        system = "aarch64-linux";
+        pkgs = inputs.nixpkgs.legacyPackages."aarch64-linux";
+      };
       systems = [
         "aarch64-linux"
         "x86_64-linux"
@@ -25,71 +28,22 @@
       });
 
       devShells = forAllSystems (system: {
-        default = inputs.nixpkgs.legacyPackages.${system}.mkShellNoCC {
-          packages = [ outputs.formatter.${system} ];
-        };
+        default = nasImported.shell;
       });
 
       overlays = {
-        apple-silicon-overlay = import ./apple-silicon-support/packages/overlay.nix;
+        apple-silicon-overlay = nasImported.overlays.apple-silicon-overlay;
         default = outputs.overlays.apple-silicon-overlay;
       };
 
       nixosModules = {
-        apple-silicon-support = ./apple-silicon-support;
+        apple-silicon-support = nasImported.nixosModules.apple-silicon-support;
         default = outputs.nixosModules.apple-silicon-support;
       };
 
-      packages = forAllSystems (
-        system:
-        let
-          pkgs = import inputs.nixpkgs {
-            crossSystem.system = "aarch64-linux";
-            localSystem.system = system;
-            overlays = [
-              outputs.overlays.default
-            ];
-          };
-        in
-        {
-          inherit (pkgs)
-            uboot-asahi
-            ;
-
-          linux-asahi = pkgs.linux-asahi.kernel;
-
-          installer-bootstrap =
-            let
-              installer-system = inputs.nixpkgs.lib.nixosSystem {
-                inherit system;
-
-                specialArgs = {
-                  modulesPath = inputs.nixpkgs + "/nixos/modules";
-                };
-
-                modules = [
-                  ./iso-configuration
-                  {
-                    hardware.asahi.pkgsSystem = system;
-
-                    # make sure this matches the post-install
-                    # `hardware.asahi.pkgsSystem`
-                    nixpkgs.hostPlatform.system = "aarch64-linux";
-                    nixpkgs.buildPlatform.system = system;
-                    nixpkgs.overlays = [ outputs.overlays.default ];
-                  }
-                ];
-              };
-
-              config = installer-system.config;
-            in
-            (config.system.build.isoImage.overrideAttrs (old: {
-              # add ability to access the whole config from the command line
-              passthru = (old.passthru or { }) // {
-                inherit config;
-              };
-            }));
-        }
-      );
+      packages."aarch64-linux" = {
+        inherit (nasImported.packages) linux-asahi uboot-asahi;
+        inherit (nasImported) installer-bootstrap;
+      };
     };
 }
