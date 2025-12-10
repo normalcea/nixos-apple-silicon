@@ -35,6 +35,7 @@
   };
 
   packages = {
+    nas-manual = pkgs.callPackage ./apple-silicon-support/packages/nas-manual { };
     linux-asahi = (crossCompPkgs.callPackage ./apple-silicon-support/packages/linux-asahi { }).kernel;
     uboot-asahi = crossCompPkgs.callPackage ./apple-silicon-support/packages/uboot-asahi { };
     installer-iso =
