@@ -14,6 +14,8 @@
 }:
 
 {
+  nix.package = pkgs.lixPackageSets.latest.lix;
+
   imports = [
     (modulesPath + "/profiles/base.nix")
     (modulesPath + "/profiles/minimal.nix")
