@@ -566,6 +566,21 @@ Apple Keyboard})
  '';
 @end example
 
+@subsection MacBook models with a touchbar
+
+If you have a MacBook model that has a
+@url{https://support.apple.com/guide/mac-help/use-the-touch-bar-mchlbfd5b039/mac,
+touchbar} you will also have to add this snippet to your configuration
+to ensure that graphical sessions render on the main display and not
+within the touchbar itself:
+
+@example nix
+hardware.apple.touchBar = @{
+  enable = true;
+  package = pkgs.tiny-dfr;
+@};
+@end example
+
 @subsection Wireless networking
 
 Use @code{iwd} in the configuration instead of @code{wpa_supplicant}
