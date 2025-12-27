@@ -4,6 +4,7 @@
 @set VERSION release-2025-11-18
 @set DEVELOPMENT
 @set FORGE_URL https://github.com/nix-community/nixos-apple-silicon
+@set MATRIX @url{https://matrix.to/#/%23asahi:nixos.org, asahi:nixos.org}
 @set MAINTAINERS @@tpwrules, @@flokli, @@yuyuyureka
 @set BUG_TRACKER @url{https://github.com/nix-community/nixos-apple-silicon/issues, Bug Tracker}
 @set RELEASES_MIRROR @url{https://github.com/nix-community/nixos-apple-silicon/releases, GitHub Releases}
@@ -65,6 +66,13 @@ The version of the manual you are reading is @value{VERSION}
 @quotation Note
 This is a development version of this manual and may not be accurate
 to the latest tagged release (@value{VERSION}).
+@end quotation
+@end ifset
+
+@ifset MATRIX
+@quotation Note
+Discussion regarding apple-silicon support in NixOS can be had at the
+dedicated matrix room located at (@value{MATRIX})
 @end quotation
 @end ifset
 
