@@ -50,5 +50,24 @@
   packages = {
     linux-asahi = (crossCompPkgs.callPackage ./apple-silicon-support/packages/linux-asahi { }).kernel;
     uboot-asahi = crossCompPkgs.callPackage ./apple-silicon-support/packages/uboot-asahi { };
+    # Experimental: hardware compatability and multi-os support is
+    # degraded. Overlay this onto the `uboot-asahi` attribute in
+    # consuming configurations. See
+    # <https://github.com/NixOS/nixpkgs/pull/430267> for more details
+    # regarding upstream uboot support.
+    ubootAppleM1 = crossCompPkgs.buildUBoot {
+      defconfig = "apple_m1_defconfig";
+      extraConfig = ''
+        CONFIG_VIDEO_FONT_4X6=n
+        CONFIG_VIDEO_FONT_8X16=n
+        CONFIG_VIDEO_FONT_SUN12X22=n
+        CONFIG_VIDEO_FONT_16X32=y
+      '';
+      extraMeta.platforms = [ "aarch64-linux" ];
+      filesToInstall = [ "u-boot-nodtb.bin.gz" ];
+      preInstall = ''
+        gzip -n u-boot-nodtb.bin
+      '';
+    };
   };
 }
