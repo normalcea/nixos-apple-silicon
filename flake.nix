@@ -8,15 +8,21 @@
   # here.
   description = "Apple Silicon support for NixOS; flake shim";
 
+
+  inputs = {
+    nas.url = "github:normalcea/nixos-apple-silicon/use-npins-flake-shim";
+  };
+
   outputs =
     {
       self,
       nixpkgs,
+      nas,
       ...
     }:
     let
       inherit (self) outputs;
-      nasImported = import "${./.}" {
+      nasImported = import nas {
         system = "aarch64-linux";
         pkgs = nixpkgs.legacyPackages."aarch64-linux";
       };

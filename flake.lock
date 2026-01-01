@@ -1,6 +1,37 @@
 {
   "nodes": {
+    "nas": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1767233958,
+        "narHash": "sha256-sDMT1GqPlBoceVqT5gBxD1BxnLmFd8K8UD/eUgcUmAQ=",
+        "owner": "normalcea",
+        "repo": "nixos-apple-silicon",
+        "rev": "a1db4c825a021ef232d740f8fd7e0995881fe2d3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "normalcea",
+        "ref": "use-npins-flake-shim",
+        "repo": "nixos-apple-silicon",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
+      "locked": {
+        "lastModified": 0,
+        "narHash": "sha256-TZK5X/3M1Wjyl7k8ogqIYizBVjoSNhGCAuOjJJbI3BU=",
+        "path": "/nix/store/7920r5i390pksrygvcda6pq8ygzk40d3-source",
+        "type": "path"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_2": {
       "locked": {
         "lastModified": 0,
         "narHash": "sha256-TZK5X/3M1Wjyl7k8ogqIYizBVjoSNhGCAuOjJJbI3BU=",
@@ -14,7 +45,8 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nas": "nas",
+        "nixpkgs": "nixpkgs_2"
       }
     }
   },
