@@ -16,7 +16,7 @@
     }:
     let
       inherit (self) outputs;
-      nasImported = import ./. {
+      nasImported = import "${./.}" {
         system = "aarch64-linux";
         pkgs = nixpkgs.legacyPackages."aarch64-linux";
       };
