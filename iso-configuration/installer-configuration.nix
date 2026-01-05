@@ -84,10 +84,6 @@
   hardware.enableRedistributableFirmware = lib.mkForce false;
   services.pulseaudio.enable = false;
   hardware.asahi.setupAsahiSound = false;
-  # avoid including non-reproducible dbus docs
-  documentation.doc.enable = false;
-  documentation.info.enable = lib.mkForce false;
-  documentation.nixos.enable = lib.mkOverride 49 false;
   system.extraDependencies = lib.mkForce [ ];
 
   # Disable wpa_supplicant because it can't use WPA3-SAE on broadcom chips that are used on macs and it is harder to use and less mainained than iwd in general
