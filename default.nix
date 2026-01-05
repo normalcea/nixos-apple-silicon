@@ -24,10 +24,12 @@
       },
 }:
 {
+  formatter = pkgs.nixfmt-tree;
+
   shell = pkgs.mkShellNoCC {
     packages = with pkgs; [
       npins
-      nixfmt-tree
+      self.formatter
     ];
   };
 

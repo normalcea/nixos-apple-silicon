@@ -22,7 +22,7 @@
       forAllSystems = inputs.nixpkgs.lib.genAttrs systems;
     in
     {
-      formatter = forAllSystems (system: inputs.nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      formatter = forAllSystems (system: nasImported.formatter);
       checks = forAllSystems (system: {
         formatting = outputs.formatter.${system};
       });
