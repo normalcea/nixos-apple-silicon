@@ -5,13 +5,15 @@ on:
 jobs:
   linters:
     name: Linters
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: cachix/install-nix-action@v31
 
       - name: Check formatting
-        run: nix-shell --run "treefmt --ci"
+        run: |
+             formatter_storepath=$(nix-build -A formatter)
+             "${formatter_storepath}"/bin/treefmt --ci
 
       - name: Check derivations (do not build)
         run: nix-instantiate -A packages -A installer-bootstrap
